@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computing for Good | Accessibility</title>
+    <meta name="description" content="How screen readers, live captioning and speech technology open up digital life for disabled people.">
+
+    <!-- Bootstrap 5 (shared theme across every page in the group) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <!-- Same shared theme as index.html, plus the styles for this page. -->
+    <style>
+        :root {
+            --bs-body-font-family: "Source Sans 3", system-ui, sans-serif;
+            --bs-body-bg: #f6f8f7;
+            --bs-body-color: #1c2b2b;
+            --bs-link-color: #0b5c5e;
+            --bs-link-hover-color: #073f41;
+            --ink: #0d3b3c;
+            --signal: #f2b134;
+            --mist: #dfe9e7;
+            --topic: #7a4fa3;
+            --topic-deep: #241536;
+            --mono: "JetBrains Mono", ui-monospace, monospace;
+        }
+
+        h1, h2, h3, h4, .navbar-brand {
+            font-family: "Bricolage Grotesque", "Source Sans 3", sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        .navbar { background: var(--ink); }
+        .navbar .nav-link { color: rgba(255, 255, 255, 0.8); }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active { color: #fff; }
+        .navbar .nav-link.active { box-shadow: inset 0 -3px 0 var(--signal); }
+
+        a:focus-visible, .btn:focus-visible, .nav-link:focus-visible {
+            outline: 3px solid var(--signal);
+            outline-offset: 2px;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: 1rem;
+            top: -4rem;
+            z-index: 1000;
+            padding: 0.6rem 1rem;
+            background: var(--signal);
+            color: #1c2b2b;
+            font-weight: 600;
+            transition: top 0.15s;
+        }
+        .skip-link:focus { top: 1rem; }
+
+        /* ---------- Hero: the lead arrives as a live caption ---------- */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: var(--topic-deep);
+            color: #fff;
+            padding: clamp(4rem, 10vw, 7.5rem) 0 clamp(3.5rem, 8vw, 6rem);
+        }
+        .hero::after {
+            /* faint braille-dot texture */
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.6px, transparent 1.7px);
+            background-size: 22px 22px;
+            mask-image: linear-gradient(100deg, transparent 35%, #000 85%);
+            pointer-events: none;
+        }
+        .hero .container { position: relative; z-index: 1; }
+
+        .eyebrow {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .hero .eyebrow { color: var(--signal); }
+
+        .hero h1 {
+            font-size: clamp(3rem, 9vw, 7rem);
+            font-weight: 800;
+            line-height: 0.92;
+            letter-spacing: -0.035em;
+            max-width: 11ch;
+            margin: 1.25rem 0 2.5rem;
+        }
+        .hero h1 em {
+            font-style: normal;
+            color: var(--signal);
+        }
+
+        .caption-box {
+            max-width: 46rem;
+            background: #000;
+            border-radius: 0.35rem;
+            padding: 1.1rem 1.35rem 1.25rem;
+            box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+        }
+        .caption-head {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .live-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: #ff5a5f;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+        .wave { display: inline-flex; align-items: center; gap: 3px; height: 14px; margin-left: auto; }
+        .wave span {
+            width: 3px;
+            height: 100%;
+            background: var(--signal);
+            border-radius: 2px;
+            transform-origin: center;
+            animation: wave 1s ease-in-out infinite;
+        }
+        .wave span:nth-child(2) { animation-delay: -0.8s; }
+        .wave span:nth-child(3) { animation-delay: -0.55s; }
+        .wave span:nth-child(4) { animation-delay: -0.3s; }
+        .wave span:nth-child(5) { animation-delay: -0.15s; }
+        .wave.done span { animation: none; transform: scaleY(0.25); }
+
+        .caption-text {
+            margin: 0;
+            font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+            line-height: 1.45;
+            color: #fff;
+            min-height: 4.35em;
+        }
+        .caption-text .w { opacity: 0; transition: opacity 0.12s; }
+        .caption-text .w.on { opacity: 1; }
+        .caption-text .cursor {
+            display: inline-block;
+            width: 0.55em;
+            height: 1.05em;
+            margin-left: 0.1em;
+            vertical-align: -0.15em;
+            background: var(--signal);
+            animation: blink 1s steps(1) infinite;
+        }
+
+        @keyframes pulse { 50% { opacity: 0.25; } }
+        @keyframes wave { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* ---------- Figures strip ---------- */
+        .figures {
+            background: var(--topic);
+            color: #fff;
+        }
+        .figures .fig {
+            padding: 2.25rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        @media (min-width: 768px) {
+            .figures .fig { border-top: 0; border-left: 1px solid rgba(255, 255, 255, 0.25); padding: 2.75rem 0 2.75rem 1.75rem; }
+            .figures .col-md-4:first-child .fig { border-left: 0; padding-left: 0; }
+        }
+        .figures .fig:first-child { border-top: 0; }
+        .fig-num {
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-weight: 800;
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            line-height: 1;
+            letter-spacing: -0.03em;
+            font-variant-numeric: tabular-nums;
+        }
+        .fig-label { max-width: 26ch; margin: 0.6rem 0 0; color: rgba(255, 255, 255, 0.88); }
+
+        /* ---------- Editorial sections ---------- */
+        .chapter { padding: clamp(4rem, 8vw, 6.5rem) 0; border-top: 1px solid var(--mist); }
+        .chapter.alt { background: #fff; }
+        .chapter:first-of-type { border-top: 0; }
+
+        .side { position: sticky; top: 2rem; }
+        .flow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.7rem;
+            border: 1.5px solid var(--topic);
+            border-radius: 999px;
+            color: var(--topic);
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .chapter h2 {
+            font-size: clamp(2.25rem, 5vw, 3.75rem);
+            font-weight: 800;
+            line-height: 0.98;
+            letter-spacing: -0.03em;
+            margin: 1.25rem 0 0;
+        }
+
+        .prose { max-width: 62ch; font-size: 1.125rem; line-height: 1.65; }
+        .prose p:last-child { margin-bottom: 0; }
+        .prose .lede {
+            font-size: 1.4rem;
+            line-height: 1.45;
+            color: var(--topic-deep);
+        }
+
+        .pull {
+            margin: 2.25rem 0;
+            padding-left: 1.25rem;
+            border-left: 4px solid var(--signal);
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.015em;
+            color: var(--topic-deep);
+        }
+
+        /* What a screen reader announces */
+        .sr-log {
+            margin: 2rem 0;
+            background: var(--topic-deep);
+            color: #e9e2f2;
+            border-radius: 0.5rem;
+            padding: 1.25rem 1.4rem;
+            font-family: var(--mono);
+            font-size: 0.88rem;
+            line-height: 1.9;
+        }
+        .sr-log .k { color: var(--signal); }
+        .sr-log .cap {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .habits { list-style: none; padding: 0; margin: 1.5rem 0; }
+        .habits li {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--mist);
+        }
+        .habits li:last-child { border-bottom: 1px solid var(--mist); }
+        .habits i { color: var(--topic); font-size: 1.3rem; line-height: 1.5; }
+
+        kbd { background: var(--topic-deep); }
+
+        /* ---------- Author ---------- */
+        .author {
+            background: var(--topic-deep);
+            color: #fff;
+            padding: clamp(4rem, 8vw, 6rem) 0;
+        }
+        .author .eyebrow { color: var(--signal); }
+        .author h2 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            margin: 1rem 0 1.25rem;
+        }
+        .author .bio { font-size: 1.35rem; color: rgba(255, 255, 255, 0.85); }
+        .btn-signal {
+            background: var(--signal);
+            border-color: var(--signal);
+            color: #1c2b2b;
+            font-weight: 600;
+        }
+        .btn-signal:hover { background: #ffc04d; border-color: #ffc04d; color: #1c2b2b; }
+
+        .reading a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+        footer { background: var(--mist); }
+
+        /* ---------- Scroll reveal ---------- */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+        .js .reveal.in { opacity: 1; transform: none; }
+
+        @media (max-width: 991.98px) {
+            .side { position: static; margin-bottom: 1.5rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .js .reveal { opacity: 1; transform: none; }
+        }
+    </style>
+    <script>document.documentElement.classList.add("js");</script>
+</head>
+
+<body>
+    <a class="skip-link" href="#content">Skip to main content</a>
+
+    <!-- Navigation: same block as every page, with "Accessibility" active -->
+    <nav class="navbar navbar-expand-lg navbar-dark" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Computing for Good</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="healthcare.html">Healthcare</a></li>
+                    <li class="nav-item"><a class="nav-link" href="climate.html">Climate</a></li>
+                    <li class="nav-item"><a class="nav-link" href="education.html">Education</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="accessibility.html">Accessibility</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <p class="eyebrow mb-0">
+                <i class="bi bi-universal-access me-1" aria-hidden="true"></i> Accessibility · by Enzo Zeballos
+            </p>
+            <h1>Technology that <em>opens doors.</em></h1>
+
+            <div class="caption-box">
+                <div class="caption-head" aria-hidden="true">
+                    <span class="live-dot"></span> Live caption
+                    <span class="wave" id="wave"><span></span><span></span><span></span><span></span><span></span></span>
+                </div>
+                <!-- Full text is in the HTML so screen readers get it straight away;
+                     the script only animates how it appears on screen. -->
+                <p class="caption-text" id="caption">
+                    Screen readers, live captioning and speech technology let disabled people
+                    read, work, study and talk on their own terms.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <!-- Figures -->
+        <section class="figures" aria-label="Key figures">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="fig">
+                            <div class="fig-num"><span class="count" data-to="1.3" data-decimals="1">1.3</span>bn</div>
+                            <p class="fig-label">people worldwide live with a significant disability, about one in six of us (WHO).</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="fig">
+                            <div class="fig-num"><span class="count" data-to="2.2" data-decimals="1">2.2</span>bn</div>
+                            <p class="fig-label">people have some form of near or distance vision impairment (WHO).</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="fig">
+                            <div class="fig-num">£<span class="count" data-to="0" data-from="300">0</span></div>
+                            <p class="fig-label">to use NVDA, VoiceOver, TalkBack or Narrator, all full screen readers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why it matters -->
+        <section class="chapter">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="side reveal">
+                            <span class="flow">Why it matters</span>
+                            <h2>Online is where life happens now.</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <div class="prose reveal">
+                            <p class="lede">
+                                As more of everyday life moves online, from banking to booking a GP
+                                appointment, a website that only works with a mouse, a screen and sound
+                                shuts people out of services everyone else takes for granted.
+                            </p>
+                            <p>
+                                Computing is part of the problem, but it is also a large part of the
+                                answer. The tools below turn text into speech, speech into text, and
+                                give people new ways to control a computer when a mouse and keyboard
+                                do not work for them.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen readers -->
+        <section id="screen-readers" class="chapter alt">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="side reveal">
+                            <span class="flow"><i class="bi bi-display" aria-hidden="true"></i> Screen <i class="bi bi-arrow-right" aria-hidden="true"></i> Speech</span>
+                            <h2>Screen readers</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <div class="prose reveal">
+                            <p class="lede">
+                                A screen reader reads out what is on the screen, or sends it to a
+                                refreshable braille display.
+                            </p>
+                            <p>
+                                Rather than reading pixels, it uses the structure of the page: headings,
+                                links, buttons, form labels and image descriptions. Users move around with
+                                keyboard shortcuts or touch gestures, jumping from heading to heading or
+                                listing every link on a page. Tabbing to the menu at the top of this page
+                                sounds something like this:
+                            </p>
+
+                            <div class="sr-log" aria-hidden="true">
+                                <span class="cap">What a screen reader announces</span>
+                                <span class="k">Navigation landmark,</span> Main navigation<br>
+                                <span class="k">Link,</span> Home<br>
+                                <span class="k">Link,</span> Healthcare<br>
+                                <span class="k">Current page, link,</span> Accessibility
+                            </div>
+
+                            <p>
+                                Screen readers used to be expensive specialist software. Today they are
+                                built into every major platform: VoiceOver on Apple devices, TalkBack on
+                                Android and Narrator on Windows. NVDA, an open-source screen reader for
+                                Windows started in 2006 by two blind developers in Australia, is free to
+                                download and is now one of the most widely used in the world.
+                            </p>
+                            <p class="pull">
+                                In 2009 the iPhone 3GS became the first touchscreen phone with a
+                                built-in screen reader.
+                            </p>
+                            <p>
+                                Before then many assumed a flat glass screen could never work for blind
+                                users. VoiceOver showed that it could.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live captioning -->
+        <section id="captioning" class="chapter">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="side reveal">
+                            <span class="flow"><i class="bi bi-soundwave" aria-hidden="true"></i> Speech <i class="bi bi-arrow-right" aria-hidden="true"></i> Text</span>
+                            <h2>Live captioning</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <div class="prose reveal">
+                            <p class="lede">
+                                Automatic speech recognition turns spoken words into text in real time,
+                                like the caption at the top of this page.
+                            </p>
+                            <p>
+                                It uses machine learning models trained on huge amounts of recorded speech.
+                                For deaf and hard of hearing people this means captions on video calls,
+                                lectures, phone calls and conversations in the street, not just on
+                                pre-captioned TV.
+                            </p>
+                            <p>
+                                Android's Live Caption and Apple's Live Captions caption any audio playing
+                                on the device, and much of the processing now happens on the phone itself,
+                                so nothing has to be sent to a server. Teams, Zoom and Google Meet all offer
+                                automatic captions, and many universities use them on recorded lectures.
+                            </p>
+                            <p class="pull">
+                                Captions help far more people than those who cannot hear.
+                            </p>
+                            <p>
+                                Anyone watching in a noisy room, anyone listening in a second language,
+                                and anyone who simply remembers more when they read along.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Speech technology -->
+        <section id="speech" class="chapter alt">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="side reveal">
+                            <span class="flow"><i class="bi bi-mic" aria-hidden="true"></i> Voice <i class="bi bi-arrow-left-right" aria-hidden="true"></i> Device</span>
+                            <h2>Speech technology</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <div class="prose reveal">
+                            <p class="lede">
+                                Speech works in both directions: people talk to their devices, and devices
+                                talk for people.
+                            </p>
+                            <p>
+                                <strong>Voice control</strong> lets people with limited movement operate a
+                                computer or phone entirely by speaking: opening apps, dictating emails and
+                                clicking buttons by name. <strong>Text-to-speech</strong> gives a voice to
+                                people who cannot speak, through augmentative and alternative communication
+                                (AAC) devices, the best known being the synthesiser used by Stephen Hawking.
+                            </p>
+                            <p>
+                                Voice banking lets someone diagnosed with a condition such as motor neurone
+                                disease record their own voice while they still can, so their AAC device
+                                later speaks in a voice that sounds like them rather than a generic one.
+                                Apps such as Be My Eyes connect blind users with sighted volunteers over
+                                video, and now offer an AI assistant that describes photos aloud.
+                            </p>
+                            <p>
+                                Eye-tracking and switch access complete the picture, giving people who
+                                cannot speak or use their hands a way to type and control a device with
+                                their gaze or a single button.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standards -->
+        <section id="standards" class="chapter">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="side reveal">
+                            <span class="flow"><i class="bi bi-code-slash" aria-hidden="true"></i> For developers</span>
+                            <h2>Building accessible software</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <div class="prose reveal">
+                            <p class="lede">
+                                Assistive technology only works if the software it talks to is built
+                                properly.
+                            </p>
+                            <p>
+                                The Web Content Accessibility Guidelines (WCAG), published by the W3C, set
+                                out how. They are organised around four principles: content must be
+                                perceivable, operable, understandable and robust. In practice, a lot of it
+                                comes down to a few habits:
+                            </p>
+                            <ul class="habits">
+                                <li><i class="bi bi-code" aria-hidden="true"></i><span>Use real HTML elements (<code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, headings in order) so screen readers understand the page.</span></li>
+                                <li><i class="bi bi-image" aria-hidden="true"></i><span>Give every meaningful image a text alternative with the <code>alt</code> attribute.</span></li>
+                                <li><i class="bi bi-keyboard" aria-hidden="true"></i><span>Make sure everything works with a keyboard alone, with a visible focus outline.</span></li>
+                                <li><i class="bi bi-circle-half" aria-hidden="true"></i><span>Keep enough contrast between text and background, and never rely on colour alone.</span></li>
+                                <li><i class="bi bi-badge-cc" aria-hidden="true"></i><span>Caption videos and provide transcripts for audio.</span></li>
+                            </ul>
+                            <p>
+                                In the UK, public sector websites must meet WCAG under the Public Sector
+                                Bodies Accessibility Regulations 2018. This page tries to follow it too:
+                                reload and press <kbd>Tab</kbd> to find the skip link.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section id="challenges" class="chapter alt">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="side reveal">
+                            <span class="flow"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Still to fix</span>
+                            <h2>Challenges</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <div class="prose reveal">
+                            <p class="lede">
+                                Most websites still fall short, and every gap is a barrier.
+                            </p>
+                            <p>
+                                Missing image descriptions, low-contrast text and unlabelled form fields
+                                remain common. Speech recognition is also less accurate for people with
+                                strong regional accents, non-native speakers and people whose speech is
+                                affected by a disability, often the people who need it most.
+                            </p>
+                            <p>
+                                Cost is another barrier. Mainstream phones have made a lot of assistive
+                                technology free, but braille displays and specialist AAC devices can still
+                                cost thousands of pounds.
+                            </p>
+                            <p class="pull">
+                                The best results come when disabled people help design the technology
+                                from the start.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Author -->
+        <section id="author" class="author">
+            <div class="container">
+                <div class="row g-4 align-items-end">
+                    <div class="col-lg-8 reveal">
+                        <p class="eyebrow mb-0">About the author</p>
+                        <h2>Enzo Zeballos</h2>
+                        <p class="bio mb-0">Web developer guy with 0 experience</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end reveal">
+                        <a class="btn btn-signal btn-lg" href="https://github.com/Enzozeb" target="_blank" rel="noopener">
+                            <i class="bi bi-github me-1" aria-hidden="true"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Further reading -->
+        <section class="chapter alt reading">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <span class="flow">Sources</span>
+                        <h2>Further reading</h2>
+                    </div>
+                    <div class="col-lg-8 col-xl-7 offset-xl-1">
+                        <ul class="habits mt-0">
+                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.who.int/news-room/fact-sheets/detail/disability-and-health" target="_blank" rel="noopener">WHO fact sheet: Disability and health</a></li>
+                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">W3C: WCAG overview</a></li>
+                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.nvaccess.org/" target="_blank" rel="noopener">NV Access, makers of the free NVDA screen reader</a></li>
+                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps" target="_blank" rel="noopener">GOV.UK: Accessibility requirements for public sector websites</a></li>
+                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.bemyeyes.com/" target="_blank" rel="noopener">Be My Eyes</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-4">
+        <div class="container d-flex flex-column flex-md-row justify-content-between gap-2 small">
+            <span>Built by the group for the git collaboration practical, Department of Computer Science, Durham University.</span>
+            <a href="https://github.com/Kolyte/practical" target="_blank" rel="noopener">View the repository on GitHub</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        // Hero: reveal the caption word by word, like live captions
+        const caption = document.getElementById("caption");
+        const wave = document.getElementById("wave");
+        if (reduceMotion) {
+            wave.classList.add("done");
+        } else {
+            const words = caption.textContent.trim().split(/\s+/);
+            const visual = document.createElement("span");
+            visual.setAttribute("aria-hidden", "true");
+            visual.innerHTML = words.map(w => `<span class="w">${w}</span>`).join(" ") + '<span class="cursor"></span>';
+            const spoken = document.createElement("span");
+            spoken.className = "visually-hidden";
+            spoken.textContent = words.join(" ");
+            caption.replaceChildren(spoken, visual);
+
+            const spans = visual.querySelectorAll(".w");
+            let i = 0;
+            setTimeout(function next() {
+                spans[i++].classList.add("on");
+                if (i < spans.length) {
+                    setTimeout(next, 110 + Math.random() * 140);
+                } else {
+                    wave.classList.add("done");
+                }
+            }, 700);
+        }
+
+        // Count the figures up (or down) when they scroll into view
+        function runCount(el) {
+            const to = parseFloat(el.dataset.to);
+            const from = parseFloat(el.dataset.from || 0);
+            const decimals = parseInt(el.dataset.decimals || 0, 10);
+            const start = performance.now();
+            const duration = 1400;
+            (function frame(now) {
+                const t = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - t, 3);
+                el.textContent = (from + (to - from) * eased).toFixed(decimals);
+                if (t < 1) requestAnimationFrame(frame);
+            })(start);
+        }
+
+        // Fade sections in as they scroll into view
+        const targets = document.querySelectorAll(".reveal, .count");
+        if (reduceMotion || !("IntersectionObserver" in window)) {
+            targets.forEach(el => el.classList.add("in"));
+        } else {
+            const io = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add("in");
+                    if (entry.target.classList.contains("count")) runCount(entry.target);
+                    io.unobserve(entry.target);
+                });
+            }, { threshold: 0.2 });
+            targets.forEach(el => io.observe(el));
+        }
+    </script>
+</body>
+</html>
