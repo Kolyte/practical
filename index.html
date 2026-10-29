@@ -1,27 +1,313 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>  
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Website</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <header>
-            <h1>Welcome to My Website</h1>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <main>
-            <section id="home">
-                <h2>Home</h2>
-                <p>This is the home section of my website.</p>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computing for Good | Home</title>
+    <meta name="description" content="Group web pages on applications of computing that make a positive contribution to society.">
 
+    <!-- Bootstrap 5 (shared theme across every page in the group) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
 
-            </section>
+    <!-- Put the shared theme in styles.css so every page can reuse it.
+         It is inlined here so this file works on its own. -->
+    <style>
+        :root {
+            --bs-body-font-family: "Source Sans 3", system-ui, sans-serif;
+            --bs-body-bg: #f6f8f7;
+            --bs-body-color: #1c2b2b;
+            --bs-link-color: #0b5c5e;
+            --bs-link-hover-color: #073f41;
+            --ink: #0d3b3c;
+            --signal: #f2b134;
+            --mist: #dfe9e7;
+        }
+
+        h1, h2, h3, h4, .navbar-brand {
+            font-family: "Bricolage Grotesque", "Source Sans 3", sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        .navbar { background: var(--ink); }
+        .navbar .nav-link { color: rgba(255, 255, 255, 0.8); }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active { color: #fff; }
+        .navbar .nav-link.active { box-shadow: inset 0 -3px 0 var(--signal); }
+
+        .hero {
+            background: var(--ink);
+            color: #fff;
+            padding: 5rem 0 4.5rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 4.25rem);
+            line-height: 1.05;
+            max-width: 15ch;
+        }
+        .hero p.lead {
+            max-width: 52ch;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .btn-signal {
+            background: var(--signal);
+            border-color: var(--signal);
+            color: #1c2b2b;
+            font-weight: 600;
+        }
+        .btn-signal:hover { background: #ffc04d; border-color: #ffc04d; color: #1c2b2b; }
+
+        .topic-card {
+            border: 1px solid var(--mist);
+            border-left: 6px solid var(--topic, var(--ink));
+            border-radius: 0.5rem;
+            background: #fff;
+        }
+        .topic-card .icon { font-size: 1.75rem; color: var(--topic, var(--ink)); }
+        .topic-card .stretched-link { color: inherit; text-decoration: none; }
+        .topic-card:focus-within { outline: 3px solid var(--signal); outline-offset: 2px; }
+
+        .author-line a { white-space: nowrap; }
+        .prose { max-width: 65ch; }
+
+        footer { background: var(--mist); }
+        a:focus-visible, .btn:focus-visible, .nav-link:focus-visible {
+            outline: 3px solid var(--signal);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation: copy this block into every page and change which link is "active" -->
+    <nav class="navbar navbar-expand-lg navbar-dark" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Computing for Good</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="healthcare.html">Healthcare</a></li>
+                    <li class="nav-item"><a class="nav-link" href="climate.html">Climate</a></li>
+                    <li class="nav-item"><a class="nav-link" href="education.html">Education</a></li>
+                    <li class="nav-item"><a class="nav-link" href="accessibility.html">Accessibility</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 class="fw-bold mb-4">Computing that makes life better</h1>
+            <p class="lead mb-4">
+                Four of us each picked an area where software, data and hardware are already
+                improving lives, and wrote it up. Start with whichever interests you.
+            </p>
+            <a href="#topics" class="btn btn-signal btn-lg">Browse the topics</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Topics -->
+        <section id="topics" class="py-5">
+            <div class="container">
+                <h2 class="mb-2">Four applications, four authors</h2>
+                <p class="prose text-body-secondary mb-4">
+                    Each page was written by one member of the group. Author details on each page
+                    were written by a different member.
+                </p>
+
+                <div class="row g-4">
+                    <!-- Topic 1 -->
+                    <div class="col-md-6">
+                        <article class="topic-card h-100 p-4 position-relative" style="--topic:#b83a4b;">
+                            <i class="bi bi-heart-pulse icon" aria-hidden="true"></i>
+                            <h3 class="h4 mt-2">
+                                <a class="stretched-link" href="healthcare.html">Healthcare</a>
+                            </h3>
+                            <p class="mb-3">
+                                Machine learning for medical imaging, faster drug discovery and
+                                remote patient monitoring.
+                            </p>
+                            <p class="small text-body-secondary mb-0 author-line">
+                                Author: <strong>Member 1</strong>
+                            </p>
+                        </article>
+                    </div>
+
+                    <!-- Topic 2 -->
+                    <div class="col-md-6">
+                        <article class="topic-card h-100 p-4 position-relative" style="--topic:#2e7d4f;">
+                            <i class="bi bi-tree icon" aria-hidden="true"></i>
+                            <h3 class="h4 mt-2">
+                                <a class="stretched-link" href="climate.html">Climate and environment</a>
+                            </h3>
+                            <p class="mb-3">
+                                Climate modelling, smart energy grids and satellite monitoring of
+                                forests and oceans.
+                            </p>
+                            <p class="small text-body-secondary mb-0 author-line">
+                                Author: <strong>Member 2</strong>
+                            </p>
+                        </article>
+                    </div>
+
+                    <!-- Topic 3 -->
+                    <div class="col-md-6">
+                        <article class="topic-card h-100 p-4 position-relative" style="--topic:#2f5fa8;">
+                            <i class="bi bi-mortarboard icon" aria-hidden="true"></i>
+                            <h3 class="h4 mt-2">
+                                <a class="stretched-link" href="education.html">Education</a>
+                            </h3>
+                            <p class="mb-3">
+                                Open courseware, adaptive learning and tools that bring teaching to
+                                people who cannot get to a classroom.
+                            </p>
+                            <p class="small text-body-secondary mb-0 author-line">
+                                Author: <strong>Member 3</strong>
+                            </p>
+                        </article>
+                    </div>
+
+                    <!-- Topic 4 (delete this block if your group has three people) -->
+                    <div class="col-md-6">
+                        <article class="topic-card h-100 p-4 position-relative" style="--topic:#7a4fa3;">
+                            <i class="bi bi-universal-access icon" aria-hidden="true"></i>
+                            <h3 class="h4 mt-2">
+                                <a class="stretched-link" href="accessibility.html">Accessibility</a>
+                            </h3>
+                            <p class="mb-3">
+                                Screen readers, live captioning and speech technology that open up
+                                digital life for disabled people.
+                            </p>
+                            <p class="small text-body-secondary mb-0 author-line">
+                                Author: <strong>Member 4</strong>
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About the project -->
+        <section class="py-5 bg-white border-top border-bottom">
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-lg-6">
+                        <h2>About this site</h2>
+                        <p class="prose">
+                            This site was built for the Durham University computer science practical
+                            on collaborating with git. We worked from one shared GitHub repository,
+                            each committing our own pages, pulling each other's changes and resolving
+                            conflicts along the way.
+                        </p>
+                        <p class="prose mb-0">
+                            The pages share a Bootstrap theme and navigation bar, and are published
+                            with GitHub Pages.
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h2>Further reading</h2>
+                        <ul class="list-unstyled prose">
+                            <li class="mb-2">
+                                <i class="bi bi-box-arrow-up-right me-2" aria-hidden="true"></i>
+                                <a href="https://www.bcs.org/" target="_blank" rel="noopener">BCS, The Chartered Institute for IT</a>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-box-arrow-up-right me-2" aria-hidden="true"></i>
+                                <a href="https://www.acm.org/code-of-ethics" target="_blank" rel="noopener">ACM Code of Ethics and Professional Conduct</a>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-box-arrow-up-right me-2" aria-hidden="true"></i>
+                                <a href="https://getbootstrap.com/" target="_blank" rel="noopener">Bootstrap, the framework behind our theme</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The team -->
+        <section id="team" class="py-5">
+            <div class="container">
+                <h2 class="mb-4">The team</h2>
+                <p class="prose text-body-secondary">
+                    Each profile below was written by someone else in the group.
+                </p>
+
+                <div class="row g-4">
+                    <!-- Replace names, blurbs and links. One block per person. -->
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="h-100 p-3 bg-white border rounded">
+                            <h3 class="h5">Member 1</h3>
+                            <p class="small mb-3">Short blurb about this person, written by a teammate.</p>
+                            <a class="btn btn-sm btn-outline-dark me-1" href="https://github.com/USERNAME" target="_blank" rel="noopener">
+                                <i class="bi bi-github" aria-hidden="true"></i> GitHub
+                            </a>
+                            <a class="btn btn-sm btn-outline-dark" href="https://www.linkedin.com/in/USERNAME/" target="_blank" rel="noopener">
+                                <i class="bi bi-linkedin" aria-hidden="true"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="h-100 p-3 bg-white border rounded">
+                            <h3 class="h5">Member 2</h3>
+                            <p class="small mb-3">Short blurb about this person, written by a teammate.</p>
+                            <a class="btn btn-sm btn-outline-dark me-1" href="https://github.com/USERNAME" target="_blank" rel="noopener">
+                                <i class="bi bi-github" aria-hidden="true"></i> GitHub
+                            </a>
+                            <a class="btn btn-sm btn-outline-dark" href="https://www.linkedin.com/in/USERNAME/" target="_blank" rel="noopener">
+                                <i class="bi bi-linkedin" aria-hidden="true"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="h-100 p-3 bg-white border rounded">
+                            <h3 class="h5">Member 3</h3>
+                            <p class="small mb-3">Short blurb about this person, written by a teammate.</p>
+                            <a class="btn btn-sm btn-outline-dark me-1" href="https://github.com/USERNAME" target="_blank" rel="noopener">
+                                <i class="bi bi-github" aria-hidden="true"></i> GitHub
+                            </a>
+                            <a class="btn btn-sm btn-outline-dark" href="https://www.linkedin.com/in/USERNAME/" target="_blank" rel="noopener">
+                                <i class="bi bi-linkedin" aria-hidden="true"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="h-100 p-3 bg-white border rounded">
+                            <h3 class="h5">Member 4</h3>
+                            <p class="small mb-3">Short blurb about this person, written by a teammate.</p>
+                            <a class="btn btn-sm btn-outline-dark me-1" href="https://github.com/USERNAME" target="_blank" rel="noopener">
+                                <i class="bi bi-github" aria-hidden="true"></i> GitHub
+                            </a>
+                            <a class="btn btn-sm btn-outline-dark" href="https://www.linkedin.com/in/USERNAME/" target="_blank" rel="noopener">
+                                <i class="bi bi-linkedin" aria-hidden="true"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-4">
+        <div class="container d-flex flex-column flex-md-row justify-content-between gap-2 small">
+            <span>Built by the group for the git collaboration practical, Department of Computer Science, Durham University.</span>
+            <a href="https://github.com/USERNAME/REPO-NAME" target="_blank" rel="noopener">View the repository on GitHub</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
