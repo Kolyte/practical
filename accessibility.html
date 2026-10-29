@@ -18,15 +18,55 @@
     <style>
         :root {
             --topic: #7a4fa3;
-            --topic-deep: #241536;
+            --lilac: #cbbde6;
+            --night: #07050b;
+            --text: rgba(255, 255, 255, 0.78);
+            --muted: rgba(233, 226, 242, 0.55);
+            --hair: rgba(255, 255, 255, 0.12);
             --mono: "JetBrains Mono", ui-monospace, monospace;
+            --display: "Bricolage Grotesque", "Source Sans 3", sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--night);
+            color: var(--text);
+        }
+
+        /* ---------- Fixed layers: particles, grain ---------- */
+        .particles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+            background: radial-gradient(ellipse at 68% 50%, #1b1029 0%, #0b0712 55%, var(--night) 100%);
+        }
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.16;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        }
+        .navbar, main, footer { position: relative; z-index: 2; }
+
+        /* Page override of the shared navbar so it floats over the particles */
+        .navbar {
+            background: rgba(7, 5, 11, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .skip-link {
             position: absolute;
             left: 1rem;
             top: -4rem;
-            z-index: 1000;
+            z-index: 2000;
             padding: 0.6rem 1rem;
             background: var(--signal);
             color: #1c2b2b;
@@ -35,53 +75,91 @@
         }
         .skip-link:focus { top: 1rem; }
 
-        /* ---------- Hero: the lead arrives as a live caption ---------- */
-        .hero {
-            position: relative;
-            overflow: hidden;
-            background: var(--topic-deep);
-            color: #fff;
-            padding: clamp(4rem, 10vw, 7.5rem) 0 clamp(3.5rem, 8vw, 6rem);
-        }
-        .hero::after {
-            /* faint braille-dot texture */
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1.6px, transparent 1.7px);
-            background-size: 22px 22px;
-            mask-image: linear-gradient(100deg, transparent 35%, #000 85%);
-            pointer-events: none;
-        }
-        .hero .container { position: relative; z-index: 1; }
+        a { color: #fff; text-underline-offset: 3px; }
+        a:hover { color: var(--signal); }
 
+        /* ---------- Type ---------- */
         .eyebrow {
             font-family: var(--mono);
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-        }
-        .hero .eyebrow { color: var(--signal); }
-
-        .hero h1 {
-            font-size: clamp(3rem, 9vw, 7rem);
-            font-weight: 800;
-            line-height: 0.92;
-            letter-spacing: -0.035em;
-            max-width: 11ch;
-            margin: 1.25rem 0 2.5rem;
-        }
-        .hero h1 em {
-            font-style: normal;
             color: var(--signal);
         }
+        .flow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.75rem;
+            border: 1px solid rgba(203, 189, 230, 0.35);
+            border-radius: 999px;
+            color: var(--lilac);
+            font-family: var(--mono);
+            font-size: 0.74rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .scene h2 {
+            font-family: var(--display);
+            font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.035em;
+            color: #fff;
+            margin: 1.25rem 0 1.5rem;
+        }
+        .lede {
+            font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+            line-height: 1.45;
+            color: #fff;
+        }
+        .body-copy { font-size: 1.1rem; line-height: 1.7; }
+        .body-copy p:last-child { margin-bottom: 0; }
+        .body-copy strong { color: #fff; font-weight: 600; }
+        .pull {
+            margin: 2.25rem 0;
+            padding-left: 1.25rem;
+            border-left: 3px solid var(--signal);
+            font-family: var(--display);
+            font-size: 1.55rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.015em;
+            color: #fff;
+        }
+        code { color: var(--signal); }
+        kbd { background: var(--topic); }
+
+        /* ---------- Scenes ---------- */
+        .scene {
+            min-height: 100vh;
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            padding: 16vh 0;
+        }
+        .panel { max-width: 34rem; }
+
+        /* Hero */
+        .hero-scene { min-height: calc(100svh - 56px); padding: 10vh 0; }
+        .hero-scene h1 {
+            font-family: var(--display);
+            font-size: clamp(3.2rem, 8.5vw, 7rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            color: #fff;
+            margin: 1.25rem 0 2.5rem;
+        }
+        .hero-scene h1 em { font-style: normal; color: var(--signal); }
 
         .caption-box {
-            max-width: 46rem;
-            background: #000;
-            border-radius: 0.35rem;
+            max-width: 34rem;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.5rem;
             padding: 1.1rem 1.35rem 1.25rem;
-            box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
         }
         .caption-head {
             display: flex;
@@ -92,7 +170,7 @@
             font-size: 0.72rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--muted);
         }
         .live-dot {
             width: 0.5rem;
@@ -107,7 +185,6 @@
             height: 100%;
             background: var(--signal);
             border-radius: 2px;
-            transform-origin: center;
             animation: wave 1s ease-in-out infinite;
         }
         .wave span:nth-child(2) { animation-delay: -0.8s; }
@@ -115,13 +192,7 @@
         .wave span:nth-child(4) { animation-delay: -0.3s; }
         .wave span:nth-child(5) { animation-delay: -0.15s; }
         .wave.done span { animation: none; transform: scaleY(0.25); }
-
-        .caption-text {
-            margin: 0;
-            font-size: clamp(1.15rem, 2.2vw, 1.45rem);
-            line-height: 1.45;
-            color: #fff;
-        }
+        .caption-text { margin: 0; font-size: clamp(1.1rem, 1.8vw, 1.3rem); line-height: 1.45; color: #fff; }
         .caption-text .w { opacity: 0; transition: opacity 0.12s; }
         .caption-text .w.on { opacity: 1; }
         .caption-text .cursor {
@@ -133,92 +204,55 @@
             background: var(--signal);
             animation: blink 1s steps(1) infinite;
         }
+        .scroll-cue {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 2.5rem;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+        }
+        .scroll-cue i { animation: nudge 1.8s ease-in-out infinite; }
 
         @keyframes pulse { 50% { opacity: 0.25; } }
         @keyframes wave { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
         @keyframes blink { 50% { opacity: 0; } }
+        @keyframes nudge { 50% { transform: translateY(4px); } }
 
-        /* ---------- Figures strip ---------- */
-        .figures {
-            background: var(--topic);
-            color: #fff;
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-top: 2.5rem;
         }
-        .figures .fig {
-            padding: 2.25rem 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
-        }
-        @media (min-width: 768px) {
-            .figures .fig { border-top: 0; border-left: 1px solid rgba(255, 255, 255, 0.25); padding: 2.75rem 0 2.75rem 1.75rem; }
-            .figures .col-md-4:first-child .fig { border-left: 0; padding-left: 0; }
-        }
-        .figures .fig:first-child { border-top: 0; }
-        .fig-num {
-            font-family: "Bricolage Grotesque", sans-serif;
+        .stat { border-top: 1px solid var(--hair); padding-top: 1rem; }
+        .stat-num {
+            font-family: var(--display);
             font-weight: 800;
-            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-size: clamp(2rem, 3.4vw, 2.75rem);
             line-height: 1;
             letter-spacing: -0.03em;
+            color: #fff;
             font-variant-numeric: tabular-nums;
         }
-        .fig-label { max-width: 26ch; margin: 0.6rem 0 0; color: rgba(255, 255, 255, 0.88); }
-
-        /* ---------- Editorial sections ---------- */
-        .chapter { padding: clamp(4rem, 8vw, 6.5rem) 0; border-top: 1px solid var(--mist); }
-        .chapter.alt { background: #fff; }
-        .chapter:first-of-type { border-top: 0; }
-
-        .side { position: sticky; top: 2rem; }
-        .flow {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.35rem 0.7rem;
-            border: 1.5px solid var(--topic);
-            border-radius: 999px;
-            color: var(--topic);
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-        .chapter h2 {
-            font-size: clamp(2.25rem, 5vw, 3.75rem);
-            font-weight: 800;
-            line-height: 0.98;
-            letter-spacing: -0.03em;
-            margin: 1.25rem 0 0;
-        }
-
-        .prose { max-width: 62ch; font-size: 1.125rem; line-height: 1.65; }
-        .prose p:last-child { margin-bottom: 0; }
-        .prose .lede {
-            font-size: 1.4rem;
-            line-height: 1.45;
-            color: var(--topic-deep);
-        }
-
-        .pull {
-            margin: 2.25rem 0;
-            padding-left: 1.25rem;
-            border-left: 4px solid var(--signal);
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            line-height: 1.2;
-            letter-spacing: -0.015em;
-            color: var(--topic-deep);
-        }
+        .stat-label { margin: 0.5rem 0 0; font-size: 0.92rem; line-height: 1.4; color: var(--muted); }
 
         /* What a screen reader announces */
         .sr-log {
             margin: 2rem 0;
-            background: var(--topic-deep);
-            color: #e9e2f2;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 0.5rem;
             padding: 1.25rem 1.4rem;
             font-family: var(--mono);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             line-height: 1.9;
+            color: #e9e2f2;
         }
         .sr-log .k { color: var(--signal); }
         .sr-log .cap {
@@ -227,201 +261,143 @@
             font-size: 0.7rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--muted);
         }
 
         .habits { list-style: none; padding: 0; margin: 1.5rem 0; }
         .habits li {
             display: flex;
             gap: 1rem;
-            padding: 1rem 0;
-            border-top: 1px solid var(--mist);
+            padding: 0.9rem 0;
+            border-top: 1px solid var(--hair);
         }
-        .habits li:last-child { border-bottom: 1px solid var(--mist); }
-        .habits i { color: var(--topic); font-size: 1.3rem; line-height: 1.5; }
+        .habits li:last-child { border-bottom: 1px solid var(--hair); }
+        .habits i { color: var(--signal); font-size: 1.2rem; line-height: 1.5; }
 
-        kbd { background: var(--topic-deep); }
+        /* Author */
+        .author-name { font-size: clamp(3rem, 7vw, 5.5rem) !important; }
+        .bio { font-size: 1.4rem; color: #fff; }
+        .btn-signal { margin-top: 1.5rem; }
 
-        /* ---------- Author ---------- */
-        .author {
-            background: var(--topic-deep);
-            color: #fff;
-            padding: clamp(4rem, 8vw, 6rem) 0;
-        }
-        .author .eyebrow { color: var(--signal); }
-        .author h2 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 0.95;
-            margin: 1rem 0 1.25rem;
-        }
-        .author .bio { font-size: 1.35rem; color: rgba(255, 255, 255, 0.85); }
-
-        .reading a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
-
-        /* ---------- Four ways in: 3D particle cycle ---------- */
-        .orbit {
-            position: relative;
-            overflow: hidden;
-            min-height: 100vh;
-            min-height: 100svh;
+        /* Sources */
+        .sources { list-style: none; padding: 0; margin: 0; }
+        .sources li { border-top: 1px solid var(--hair); }
+        .sources li:last-child { border-bottom: 1px solid var(--hair); }
+        .sources a {
             display: flex;
-            background: radial-gradient(ellipse at 65% 45%, #1d1230 0%, #0b0712 60%, #050308 100%);
-            color: #fff;
-        }
-        .orbit-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        .orbit-grain {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.18;
-            mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-        }
-        .orbit-inner {
-            width: 100%;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
             justify-content: space-between;
-            padding-top: clamp(3rem, 8vh, 6rem);
-            padding-bottom: 2rem;
-            pointer-events: none;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            text-decoration: none;
+            font-size: 1.1rem;
         }
-        .orbit-inner a, .orbit-inner button { pointer-events: auto; }
-        .orbit .eyebrow { color: var(--signal); }
+        .sources a i { color: var(--muted); transition: transform 0.2s, color 0.2s; }
+        .sources a:hover i { color: var(--signal); transform: translate(2px, -2px); }
 
-        .orbit-copy { max-width: 30rem; }
-        .orbit-copy > * { transition: opacity 0.45s ease, transform 0.45s ease; }
-        .orbit-copy.swap > * { opacity: 0; transform: translateY(10px); }
-        .orbit-flow {
-            display: block;
-            margin: 1.5rem 0 0.75rem;
+        footer {
+            background: transparent;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--muted);
+        }
+
+        /* ---------- Fixed UI: section rail, figure note, pause ---------- */
+        .rail {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+        .rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+        .rail a {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 0.2rem 0;
+            text-decoration: none;
             font-family: var(--mono);
-            font-size: 0.8rem;
+            font-size: 0.68rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: rgba(233, 226, 242, 0.6);
+            color: var(--muted);
         }
-        .orbit-name {
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: clamp(2.6rem, 6vw, 5rem);
-            font-weight: 800;
-            line-height: 0.95;
-            letter-spacing: -0.035em;
-            margin: 0 0 1.25rem;
-        }
-        .orbit-desc {
-            font-size: 1.2rem;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.82);
-            margin-bottom: 1rem;
-        }
-        .orbit-visual {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: rgba(233, 226, 242, 0.5);
-            margin-bottom: 1.75rem;
-        }
-        .orbit-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.1rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 999px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.2s, border-color 0.2s, color 0.2s;
-        }
-        .orbit-link:hover { background: var(--signal); border-color: var(--signal); color: #1c2b2b; }
-
-        .orbit-controls {
-            display: flex;
-            align-items: flex-end;
-            gap: 1rem;
-            margin-top: 3rem;
-        }
-        .orbit-tabs {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.75rem;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .orbit-tab {
-            width: 100%;
-            padding: 0.9rem 0 0;
-            background: none;
-            border: 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            text-align: left;
-            color: rgba(255, 255, 255, 0.5);
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            transition: color 0.2s;
-        }
-        .orbit-tab::before {
+        .rail a span { opacity: 0; transform: translateX(6px); transition: opacity 0.25s, transform 0.25s; }
+        .rail a::after {
             content: "";
-            position: absolute;
-            top: -1px;
-            left: 0;
-            height: 2px;
-            width: calc(var(--p, 0) * 100%);
-            background: var(--signal);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            transition: background 0.25s, transform 0.25s;
         }
-        .orbit-tab:hover, .orbit-tab[aria-current="true"] { color: #fff; }
-        .orbit-tab:focus-visible, .orbit-pause:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
-        .orbit-pause {
-            flex: none;
+        .rail a:hover span, .rail a:focus-visible span, .rail a[aria-current="true"] span { opacity: 1; transform: none; }
+        .rail a[aria-current="true"] { color: #fff; }
+        .rail a[aria-current="true"]::after { background: var(--signal); transform: scale(1.6); }
+
+        .fig-note {
+            position: fixed;
+            right: 6rem;
+            bottom: 2rem;
+            z-index: 3;
+            max-width: 22rem;
+            margin: 0;
+            text-align: right;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            line-height: 1.5;
+            color: var(--muted);
+            transition: opacity 0.4s;
+        }
+        .fig-note.swap { opacity: 0; }
+
+        .pause {
+            position: fixed;
+            right: 1.25rem;
+            bottom: 1.25rem;
+            z-index: 3;
             width: 2.75rem;
             height: 2.75rem;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(7, 5, 11, 0.6);
             color: #fff;
             font-size: 1.1rem;
+            backdrop-filter: blur(8px);
         }
-        .orbit-pause:hover { border-color: var(--signal); color: var(--signal); }
-
-        @media (max-width: 991.98px) {
-            .orbit-inner { justify-content: flex-end; }
-            .orbit-copy { max-width: none; }
-            .orbit-name { font-size: clamp(2.2rem, 9vw, 3.25rem); }
-            .orbit-desc { font-size: 1.05rem; }
-            .orbit-controls { margin-top: 1.5rem; }
-        }
-        @media (max-width: 575.98px) {
-            .orbit-tabs { grid-template-columns: repeat(2, 1fr); row-gap: 0.25rem; }
-        }
+        .pause:hover { border-color: var(--signal); color: var(--signal); }
+        .pause:focus-visible, .rail a:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
 
         /* ---------- Scroll reveal ---------- */
         .js .reveal {
             opacity: 0;
             transform: translateY(28px);
-            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
         }
         .js .reveal.in { opacity: 1; transform: none; }
 
+        /* ---------- Smaller screens: shape sits above, text on a frosted panel ---------- */
         @media (max-width: 991.98px) {
-            .side { position: static; margin-bottom: 1.5rem; }
+            .rail, .fig-note { display: none; }
+            .scene:not(.hero-scene) { align-items: flex-end; padding: 48svh 0 8vh; }
+            .panel {
+                max-width: none;
+                padding: 1.5rem;
+                background: rgba(10, 7, 16, 0.78);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 1rem;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .hero-scene .panel { background: none; border: 0; padding: 0; backdrop-filter: none; }
+        }
+        @media (max-width: 575.98px) {
+            .stats { grid-template-columns: 1fr; }
         }
 
         @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
             *, *::before, *::after { animation: none !important; transition: none !important; }
             .js .reveal { opacity: 1; transform: none; }
         }
@@ -432,8 +408,11 @@
 <body>
     <a class="skip-link" href="#content">Skip to main content</a>
 
+    <canvas class="particles" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+
     <!-- Navigation: same block as every page, with "Accessibility" active -->
-    <nav class="navbar navbar-expand-lg navbar-dark" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" aria-label="Main navigation">
         <div class="container">
             <a class="navbar-brand fw-bold" href="index.html">Computing for Good</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -453,365 +432,293 @@
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="container">
-            <p class="eyebrow mb-0">
-                <i class="bi bi-universal-access me-1" aria-hidden="true"></i> Accessibility · by Enzo Zeballos
-            </p>
-            <h1>Technology that <em>opens doors.</em></h1>
-
-            <div class="caption-box">
-                <div class="caption-head" aria-hidden="true">
-                    <span class="live-dot"></span> Live caption
-                    <span class="wave" id="wave"><span></span><span></span><span></span><span></span><span></span></span>
-                </div>
-                <!-- Full text is in the HTML so screen readers get it straight away;
-                     the script only animates how it appears on screen. -->
-                <p class="caption-text" id="caption">
-                    Screen readers, live captioning and speech technology let disabled people
-                    read, work, study and talk on their own terms.
-                </p>
-            </div>
-        </div>
-    </header>
+    <!-- Section rail: jumps between scenes, highlights the one in view -->
+    <nav class="rail" aria-label="Sections on this page">
+        <ol>
+            <li><a href="#top"><span>Start</span></a></li>
+            <li><a href="#why"><span>Why it matters</span></a></li>
+            <li><a href="#screen-readers"><span>Screen readers</span></a></li>
+            <li><a href="#captioning"><span>Live captioning</span></a></li>
+            <li><a href="#speech"><span>Speech technology</span></a></li>
+            <li><a href="#standards"><span>Accessible code</span></a></li>
+            <li><a href="#challenges"><span>Challenges</span></a></li>
+            <li><a href="#author"><span>Author</span></a></li>
+            <li><a href="#sources"><span>Sources</span></a></li>
+        </ol>
+    </nav>
+    <p class="fig-note" id="fig-note" aria-hidden="true"></p>
+    <button class="pause" id="pause" type="button" aria-label="Pause animation">
+        <i class="bi bi-pause-fill" aria-hidden="true"></i>
+    </button>
 
     <main id="content">
-        <!-- Figures -->
-        <section class="figures" aria-label="Key figures">
+        <!-- Each section names the particle shape it forms with data-shape,
+             and describes it with data-note -->
+
+        <header id="top" class="scene hero-scene" data-shape="hopf"
+                data-note="Fig. Linked circles: every one passes through every other.">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="fig">
-                            <div class="fig-num"><span class="count" data-to="1.3" data-decimals="1">1.3</span>bn</div>
-                            <p class="fig-label">people worldwide live with a significant disability, about one in six of us (WHO).</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="fig">
-                            <div class="fig-num"><span class="count" data-to="2.2" data-decimals="1">2.2</span>bn</div>
-                            <p class="fig-label">people have some form of near or distance vision impairment (WHO).</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="fig">
-                            <div class="fig-num">£<span class="count" data-to="0" data-from="300">0</span></div>
-                            <p class="fig-label">to use NVDA, VoiceOver, TalkBack or Narrator, all full screen readers.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                <div class="panel">
+                    <p class="eyebrow mb-0">
+                        <i class="bi bi-universal-access me-1" aria-hidden="true"></i> Accessibility · by Enzo Zeballos
+                    </p>
+                    <h1>Technology that <em>opens doors.</em></h1>
 
-        <!-- Why it matters -->
-        <section class="chapter">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="side reveal">
-                            <span class="flow">Why it matters</span>
-                            <h2>Online is where life happens now.</h2>
+                    <div class="caption-box">
+                        <div class="caption-head" aria-hidden="true">
+                            <span class="live-dot"></span> Live caption
+                            <span class="wave" id="wave"><span></span><span></span><span></span><span></span><span></span></span>
                         </div>
-                    </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <div class="prose reveal">
-                            <p class="lede">
-                                As more of everyday life moves online, from banking to booking a GP
-                                appointment, a website that only works with a mouse, a screen and sound
-                                shuts people out of services everyone else takes for granted.
-                            </p>
-                            <p>
-                                Computing is part of the problem, but it is also a large part of the
-                                answer. The tools below turn text into speech, speech into text, and
-                                give people new ways to control a computer when a mouse and keyboard
-                                do not work for them.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Four ways in: particle visual that cycles through each technology -->
-        <section id="four-ways" class="orbit" aria-labelledby="orbit-heading">
-            <canvas class="orbit-canvas" aria-hidden="true"></canvas>
-            <div class="orbit-grain" aria-hidden="true"></div>
-
-            <div class="container orbit-inner">
-                <div>
-                    <h2 id="orbit-heading" class="eyebrow mb-0">Four ways in</h2>
-                    <div class="orbit-copy" id="orbit-copy">
-                        <span class="orbit-flow" id="orbit-flow">Screen → Speech</span>
-                        <p class="orbit-name" id="orbit-name">Screen readers</p>
-                        <p class="orbit-desc" id="orbit-desc">
-                            The structure of a page, read aloud or raised in braille, one element at a time.
+                        <!-- Full text is in the HTML so screen readers get it straight away;
+                             the script only animates how it appears on screen. -->
+                        <p class="caption-text" id="caption">
+                            Screen readers, live captioning and speech technology let disabled people
+                            read, work, study and talk on their own terms.
                         </p>
-                        <p class="orbit-visual" id="orbit-visual">Visual: the braille for “access”, read left to right.</p>
-                        <a class="orbit-link" id="orbit-link" href="#screen-readers">
-                            Read about screen readers <i class="bi bi-arrow-down" aria-hidden="true"></i>
-                        </a>
                     </div>
-                </div>
 
-                <div class="orbit-controls">
-                    <ul class="orbit-tabs">
-                        <li><button class="orbit-tab" type="button" data-i="0" aria-current="true">Screen readers</button></li>
-                        <li><button class="orbit-tab" type="button" data-i="1">Live captioning</button></li>
-                        <li><button class="orbit-tab" type="button" data-i="2">Speech tech</button></li>
-                        <li><button class="orbit-tab" type="button" data-i="3">Accessible code</button></li>
-                    </ul>
-                    <button class="orbit-pause" id="orbit-pause" type="button" aria-label="Pause animation">
-                        <i class="bi bi-pause-fill" aria-hidden="true"></i>
-                    </button>
+                    <a class="scroll-cue" href="#why">Scroll to explore <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
                 </div>
             </div>
-        </section>
+        </header>
 
-        <!-- Screen readers -->
-        <section id="screen-readers" class="chapter alt">
+        <section id="why" class="scene" data-shape="people"
+                 data-note="Fig. Sixty people. Ten of them, one in six, are lit.">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="side reveal">
-                            <span class="flow"><i class="bi bi-display" aria-hidden="true"></i> Screen <i class="bi bi-arrow-right" aria-hidden="true"></i> Speech</span>
-                            <h2>Screen readers</h2>
-                        </div>
+                <div class="panel reveal">
+                    <span class="flow">Why it matters</span>
+                    <h2>Online is where life happens now.</h2>
+                    <p class="lede">
+                        As more of everyday life moves online, from banking to booking a GP
+                        appointment, a website that only works with a mouse, a screen and sound
+                        shuts people out.
+                    </p>
+                    <div class="body-copy">
+                        <p>
+                            Computing is part of the problem, but it is also a large part of the
+                            answer. The tools below turn text into speech, speech into text, and
+                            give people new ways to control a computer when a mouse and keyboard
+                            do not work for them.
+                        </p>
                     </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <div class="prose reveal">
-                            <p class="lede">
-                                A screen reader reads out what is on the screen, or sends it to a
-                                refreshable braille display.
-                            </p>
-                            <p>
-                                Rather than reading pixels, it uses the structure of the page: headings,
-                                links, buttons, form labels and image descriptions. Users move around with
-                                keyboard shortcuts or touch gestures, jumping from heading to heading or
-                                listing every link on a page. Tabbing to the menu at the top of this page
-                                sounds something like this:
-                            </p>
-
-                            <div class="sr-log" aria-hidden="true">
-                                <span class="cap">What a screen reader announces</span>
-                                <span class="k">Navigation landmark,</span> Main navigation<br>
-                                <span class="k">Link,</span> Home<br>
-                                <span class="k">Link,</span> Healthcare<br>
-                                <span class="k">Current page, link,</span> Accessibility
-                            </div>
-
-                            <p>
-                                Screen readers used to be expensive specialist software. Today they are
-                                built into every major platform: VoiceOver on Apple devices, TalkBack on
-                                Android and Narrator on Windows. NVDA, an open-source screen reader for
-                                Windows started in 2006 by two blind developers in Australia, is free to
-                                download and is now one of the most widely used in the world.
-                            </p>
-                            <p class="pull">
-                                In 2009 the iPhone 3GS became the first touchscreen phone with a
-                                built-in screen reader.
-                            </p>
-                            <p>
-                                Before then many assumed a flat glass screen could never work for blind
-                                users. VoiceOver showed that it could.
-                            </p>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-num"><span class="count" data-to="1.3" data-decimals="1">1.3</span>bn</div>
+                            <p class="stat-label">people live with a significant disability, one in six of us (WHO)</p>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-num"><span class="count" data-to="2.2" data-decimals="1">2.2</span>bn</div>
+                            <p class="stat-label">have a near or distance vision impairment (WHO)</p>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-num">£<span class="count" data-to="0" data-from="300">0</span></div>
+                            <p class="stat-label">to use NVDA, VoiceOver, TalkBack or Narrator</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Live captioning -->
-        <section id="captioning" class="chapter">
+        <section id="screen-readers" class="scene" data-shape="braille"
+                 data-note="Fig. The braille for “access”, read left to right.">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="side reveal">
-                            <span class="flow"><i class="bi bi-soundwave" aria-hidden="true"></i> Speech <i class="bi bi-arrow-right" aria-hidden="true"></i> Text</span>
-                            <h2>Live captioning</h2>
+                <div class="panel reveal">
+                    <span class="flow"><i class="bi bi-display" aria-hidden="true"></i> Screen <i class="bi bi-arrow-right" aria-hidden="true"></i> Speech</span>
+                    <h2>Screen readers</h2>
+                    <p class="lede">
+                        A screen reader reads out what is on the screen, or sends it to a
+                        refreshable braille display.
+                    </p>
+                    <div class="body-copy">
+                        <p>
+                            Rather than reading pixels, it uses the structure of the page: headings,
+                            links, buttons, form labels and image descriptions. Users jump from
+                            heading to heading or list every link on a page. Tabbing through the
+                            menu at the top of this page sounds something like this:
+                        </p>
+                        <div class="sr-log" aria-hidden="true">
+                            <span class="cap">What a screen reader announces</span>
+                            <span class="k">Navigation landmark,</span> Main navigation<br>
+                            <span class="k">Link,</span> Home<br>
+                            <span class="k">Link,</span> Healthcare<br>
+                            <span class="k">Current page, link,</span> Accessibility
                         </div>
-                    </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <div class="prose reveal">
-                            <p class="lede">
-                                Automatic speech recognition turns spoken words into text in real time,
-                                like the caption at the top of this page.
-                            </p>
-                            <p>
-                                It uses machine learning models trained on huge amounts of recorded speech.
-                                For deaf and hard of hearing people this means captions on video calls,
-                                lectures, phone calls and conversations in the street, not just on
-                                pre-captioned TV.
-                            </p>
-                            <p>
-                                Android's Live Caption and Apple's Live Captions caption any audio playing
-                                on the device, and much of the processing now happens on the phone itself,
-                                so nothing has to be sent to a server. Teams, Zoom and Google Meet all offer
-                                automatic captions, and many universities use them on recorded lectures.
-                            </p>
-                            <p class="pull">
-                                Captions help far more people than those who cannot hear.
-                            </p>
-                            <p>
-                                Anyone watching in a noisy room, anyone listening in a second language,
-                                and anyone who simply remembers more when they read along.
-                            </p>
-                        </div>
+                        <p>
+                            Screen readers used to be expensive specialist software. Today they are
+                            built into every major platform: VoiceOver on Apple devices, TalkBack on
+                            Android and Narrator on Windows. NVDA, an open-source screen reader
+                            started in 2006 by two blind developers in Australia, is free and is now
+                            one of the most widely used in the world.
+                        </p>
+                        <p class="pull">
+                            In 2009 the iPhone 3GS became the first touchscreen phone with a
+                            built-in screen reader.
+                        </p>
+                        <p>
+                            Before then many assumed a flat glass screen could never work for blind
+                            users. VoiceOver showed that it could.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Speech technology -->
-        <section id="speech" class="chapter alt">
+        <section id="captioning" class="scene" data-shape="captions"
+                 data-note="Fig. A speech waveform arriving as lines of caption text.">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="side reveal">
-                            <span class="flow"><i class="bi bi-mic" aria-hidden="true"></i> Voice <i class="bi bi-arrow-left-right" aria-hidden="true"></i> Device</span>
-                            <h2>Speech technology</h2>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <div class="prose reveal">
-                            <p class="lede">
-                                Speech works in both directions: people talk to their devices, and devices
-                                talk for people.
-                            </p>
-                            <p>
-                                <strong>Voice control</strong> lets people with limited movement operate a
-                                computer or phone entirely by speaking: opening apps, dictating emails and
-                                clicking buttons by name. <strong>Text-to-speech</strong> gives a voice to
-                                people who cannot speak, through augmentative and alternative communication
-                                (AAC) devices, the best known being the synthesiser used by Stephen Hawking.
-                            </p>
-                            <p>
-                                Voice banking lets someone diagnosed with a condition such as motor neurone
-                                disease record their own voice while they still can, so their AAC device
-                                later speaks in a voice that sounds like them rather than a generic one.
-                                Apps such as Be My Eyes connect blind users with sighted volunteers over
-                                video, and now offer an AI assistant that describes photos aloud.
-                            </p>
-                            <p>
-                                Eye-tracking and switch access complete the picture, giving people who
-                                cannot speak or use their hands a way to type and control a device with
-                                their gaze or a single button.
-                            </p>
-                        </div>
+                <div class="panel reveal">
+                    <span class="flow"><i class="bi bi-soundwave" aria-hidden="true"></i> Speech <i class="bi bi-arrow-right" aria-hidden="true"></i> Text</span>
+                    <h2>Live captioning</h2>
+                    <p class="lede">
+                        Automatic speech recognition turns spoken words into text in real time,
+                        like the caption at the top of this page.
+                    </p>
+                    <div class="body-copy">
+                        <p>
+                            It uses machine learning models trained on huge amounts of recorded speech.
+                            For deaf and hard of hearing people this means captions on video calls,
+                            lectures, phone calls and conversations in the street, not just on
+                            pre-captioned TV.
+                        </p>
+                        <p>
+                            Android's Live Caption and Apple's Live Captions caption any audio playing
+                            on the device, and much of the processing now happens on the phone itself.
+                            Teams, Zoom and Google Meet all offer automatic captions, and many
+                            universities use them on recorded lectures.
+                        </p>
+                        <p class="pull">Captions help far more people than those who cannot hear.</p>
+                        <p>
+                            Anyone watching in a noisy room, anyone listening in a second language,
+                            and anyone who simply remembers more when they read along.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Standards -->
-        <section id="standards" class="chapter">
+        <section id="speech" class="scene" data-shape="voice"
+                 data-note="Fig. A voice pulsing outwards as sound waves.">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="side reveal">
-                            <span class="flow"><i class="bi bi-code-slash" aria-hidden="true"></i> For developers</span>
-                            <h2>Building accessible software</h2>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <div class="prose reveal">
-                            <p class="lede">
-                                Assistive technology only works if the software it talks to is built
-                                properly.
-                            </p>
-                            <p>
-                                The Web Content Accessibility Guidelines (WCAG), published by the W3C, set
-                                out how. They are organised around four principles: content must be
-                                perceivable, operable, understandable and robust. In practice, a lot of it
-                                comes down to a few habits:
-                            </p>
-                            <ul class="habits">
-                                <li><i class="bi bi-code" aria-hidden="true"></i><span>Use real HTML elements (<code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, headings in order) so screen readers understand the page.</span></li>
-                                <li><i class="bi bi-image" aria-hidden="true"></i><span>Give every meaningful image a text alternative with the <code>alt</code> attribute.</span></li>
-                                <li><i class="bi bi-keyboard" aria-hidden="true"></i><span>Make sure everything works with a keyboard alone, with a visible focus outline.</span></li>
-                                <li><i class="bi bi-circle-half" aria-hidden="true"></i><span>Keep enough contrast between text and background, and never rely on colour alone.</span></li>
-                                <li><i class="bi bi-badge-cc" aria-hidden="true"></i><span>Caption videos and provide transcripts for audio.</span></li>
-                            </ul>
-                            <p>
-                                In the UK, public sector websites must meet WCAG under the Public Sector
-                                Bodies Accessibility Regulations 2018. This page tries to follow it too:
-                                reload and press <kbd>Tab</kbd> to find the skip link.
-                            </p>
-                        </div>
+                <div class="panel reveal">
+                    <span class="flow"><i class="bi bi-mic" aria-hidden="true"></i> Voice <i class="bi bi-arrow-left-right" aria-hidden="true"></i> Device</span>
+                    <h2>Speech technology</h2>
+                    <p class="lede">
+                        Speech works in both directions: people talk to their devices, and devices
+                        talk for people.
+                    </p>
+                    <div class="body-copy">
+                        <p>
+                            <strong>Voice control</strong> lets people with limited movement operate a
+                            computer or phone entirely by speaking: opening apps, dictating emails and
+                            clicking buttons by name. <strong>Text-to-speech</strong> gives a voice to
+                            people who cannot speak, through augmentative and alternative communication
+                            (AAC) devices, the best known being the synthesiser used by Stephen Hawking.
+                        </p>
+                        <p>
+                            Voice banking lets someone diagnosed with a condition such as motor neurone
+                            disease record their own voice while they still can, so their AAC device
+                            later speaks in a voice that sounds like them. Apps such as Be My Eyes
+                            connect blind users with sighted volunteers over video, and now offer an AI
+                            assistant that describes photos aloud.
+                        </p>
+                        <p>
+                            Eye-tracking and switch access complete the picture, giving people who
+                            cannot speak or use their hands a way to type and control a device with
+                            their gaze or a single button.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Challenges -->
-        <section id="challenges" class="chapter alt">
+        <section id="standards" class="scene" data-shape="lattice"
+                 data-note="Fig. Keyboard focus stepping through a page's structure.">
             <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="side reveal">
-                            <span class="flow"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Still to fix</span>
-                            <h2>Challenges</h2>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <div class="prose reveal">
-                            <p class="lede">
-                                Most websites still fall short, and every gap is a barrier.
-                            </p>
-                            <p>
-                                Missing image descriptions, low-contrast text and unlabelled form fields
-                                remain common. Speech recognition is also less accurate for people with
-                                strong regional accents, non-native speakers and people whose speech is
-                                affected by a disability, often the people who need it most.
-                            </p>
-                            <p>
-                                Cost is another barrier. Mainstream phones have made a lot of assistive
-                                technology free, but braille displays and specialist AAC devices can still
-                                cost thousands of pounds.
-                            </p>
-                            <p class="pull">
-                                The best results come when disabled people help design the technology
-                                from the start.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Author -->
-        <section id="author" class="author">
-            <div class="container">
-                <div class="row g-4 align-items-end">
-                    <div class="col-lg-8 reveal">
-                        <p class="eyebrow mb-0">About the author</p>
-                        <h2>Enzo Zeballos</h2>
-                        <p class="bio mb-0">Web developer guy with 0 experience</p>
-                    </div>
-                    <div class="col-lg-4 text-lg-end reveal">
-                        <a class="btn btn-signal btn-lg" href="https://github.com/Enzozeb" target="_blank" rel="noopener">
-                            <i class="bi bi-github me-1" aria-hidden="true"></i> GitHub
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Further reading -->
-        <section class="chapter alt reading">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <span class="flow">Sources</span>
-                        <h2>Further reading</h2>
-                    </div>
-                    <div class="col-lg-8 col-xl-7 offset-xl-1">
-                        <ul class="habits mt-0">
-                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.who.int/news-room/fact-sheets/detail/disability-and-health" target="_blank" rel="noopener">WHO fact sheet: Disability and health</a></li>
-                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">W3C: WCAG overview</a></li>
-                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.nvaccess.org/" target="_blank" rel="noopener">NV Access, makers of the free NVDA screen reader</a></li>
-                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps" target="_blank" rel="noopener">GOV.UK: Accessibility requirements for public sector websites</a></li>
-                            <li><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><a href="https://www.bemyeyes.com/" target="_blank" rel="noopener">Be My Eyes</a></li>
+                <div class="panel reveal">
+                    <span class="flow"><i class="bi bi-code-slash" aria-hidden="true"></i> For developers</span>
+                    <h2>Building accessible software</h2>
+                    <p class="lede">
+                        Assistive technology only works if the software it talks to is built
+                        properly.
+                    </p>
+                    <div class="body-copy">
+                        <p>
+                            The Web Content Accessibility Guidelines (WCAG), published by the W3C, set
+                            out how. Content must be perceivable, operable, understandable and robust.
+                            In practice, a lot of it comes down to a few habits:
+                        </p>
+                        <ul class="habits">
+                            <li><i class="bi bi-code" aria-hidden="true"></i><span>Use real HTML elements (<code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, headings in order) so screen readers understand the page.</span></li>
+                            <li><i class="bi bi-image" aria-hidden="true"></i><span>Give every meaningful image a text alternative with the <code>alt</code> attribute.</span></li>
+                            <li><i class="bi bi-keyboard" aria-hidden="true"></i><span>Make sure everything works with a keyboard alone, with a visible focus outline.</span></li>
+                            <li><i class="bi bi-circle-half" aria-hidden="true"></i><span>Keep enough contrast between text and background, and never rely on colour alone.</span></li>
+                            <li><i class="bi bi-badge-cc" aria-hidden="true"></i><span>Caption videos and provide transcripts for audio.</span></li>
                         </ul>
+                        <p>
+                            In the UK, public sector websites must meet WCAG under the Public Sector
+                            Bodies Accessibility Regulations 2018. This page tries to follow it too:
+                            reload and press <kbd>Tab</kbd> to find the skip link.
+                        </p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenges" class="scene" data-shape="gaps"
+                 data-note="Fig. A page's elements, with the inaccessible ones falling away.">
+            <div class="container">
+                <div class="panel reveal">
+                    <span class="flow"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Still to fix</span>
+                    <h2>Challenges</h2>
+                    <p class="lede">Most websites still fall short, and every gap is a barrier.</p>
+                    <div class="body-copy">
+                        <p>
+                            Missing image descriptions, low-contrast text and unlabelled form fields
+                            remain common. Speech recognition is also less accurate for people with
+                            strong regional accents, non-native speakers and people whose speech is
+                            affected by a disability, often the people who need it most.
+                        </p>
+                        <p>
+                            Cost is another barrier. Mainstream phones have made a lot of assistive
+                            technology free, but braille displays and specialist AAC devices can still
+                            cost thousands of pounds.
+                        </p>
+                        <p class="pull">
+                            The best results come when disabled people help design the technology
+                            from the start.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="author" class="scene" data-shape="name"
+                 data-note="Fig. The author, in particles.">
+            <div class="container">
+                <div class="panel reveal">
+                    <span class="flow">About the author</span>
+                    <h2 class="author-name">Enzo Zeballos</h2>
+                    <p class="bio mb-0">Web developer guy with 0 experience</p>
+                    <a class="btn btn-signal btn-lg" href="https://github.com/Enzozeb" target="_blank" rel="noopener">
+                        <i class="bi bi-github me-1" aria-hidden="true"></i> GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="sources" class="scene" data-shape="dust"
+                 data-note="Fig. Everything, at rest.">
+            <div class="container">
+                <div class="panel reveal">
+                    <span class="flow">Sources</span>
+                    <h2>Further reading</h2>
+                    <ul class="sources">
+                        <li><a href="https://www.who.int/news-room/fact-sheets/detail/disability-and-health" target="_blank" rel="noopener">WHO fact sheet: Disability and health <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener">W3C: WCAG overview <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.nvaccess.org/" target="_blank" rel="noopener">NV Access, makers of NVDA <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps" target="_blank" rel="noopener">GOV.UK: Public sector accessibility rules <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.bemyeyes.com/" target="_blank" rel="noopener">Be My Eyes <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a></li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -870,7 +777,7 @@
             })(start);
         }
 
-        // Fade sections in as they scroll into view
+        // Fade text in as it scrolls into view
         const targets = document.querySelectorAll(".reveal, .count");
         if (reduceMotion || !("IntersectionObserver" in window)) {
             targets.forEach(el => el.classList.add("in"));
@@ -882,63 +789,26 @@
                     if (entry.target.classList.contains("count")) runCount(entry.target);
                     io.unobserve(entry.target);
                 });
-            }, { threshold: 0.2 });
+            }, { threshold: 0.15 });
             targets.forEach(el => io.observe(el));
         }
     </script>
 
-    <!-- "Four ways in": thousands of particles that morph into a shape for each technology -->
+    <!-- Particle field: one set of particles that follows the reader down the page,
+         spiralling between shapes as each section scrolls into view -->
     <script type="module">
         import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 
-        const STATES = [
-            {
-                flow: "Screen → Speech",
-                name: "Screen readers",
-                desc: "The structure of a page, read aloud or raised in braille, one element at a time.",
-                visual: "Visual: the braille for “access”, read left to right.",
-                href: "#screen-readers",
-                link: "Read about screen readers"
-            },
-            {
-                flow: "Speech → Text",
-                name: "Live captioning",
-                desc: "Spoken words turned into captions in real time, on calls, in lectures and in the street.",
-                visual: "Visual: a speech waveform turning into lines of caption text.",
-                href: "#captioning",
-                link: "Read about live captioning"
-            },
-            {
-                flow: "Voice ↔ Device",
-                name: "Speech technology",
-                desc: "People talking to their devices, and devices that talk for people who cannot.",
-                visual: "Visual: a voice pulsing outwards as sound waves.",
-                href: "#speech",
-                link: "Read about speech technology"
-            },
-            {
-                flow: "For developers",
-                name: "Accessible code",
-                desc: "Clear structure that assistive technology can follow, with a visible focus moving from element to element.",
-                visual: "Visual: keyboard focus stepping through a page's structure.",
-                href: "#standards",
-                link: "Read about accessible code"
-            }
-        ];
-
-        const HOLD = 7;        // seconds each shape is shown
-        const MORPH = 1.8;     // seconds to morph between shapes
-
-        const section = document.getElementById("four-ways");
-        const canvas = section.querySelector(".orbit-canvas");
-        const copy = document.getElementById("orbit-copy");
-        const tabs = [...section.querySelectorAll(".orbit-tab")];
-        const pauseBtn = document.getElementById("orbit-pause");
+        const canvas = document.querySelector(".particles");
+        const scenes = [...document.querySelectorAll("[data-shape]")];
+        const railLinks = [...document.querySelectorAll(".rail a")];
+        const figNote = document.getElementById("fig-note");
+        const pauseBtn = document.getElementById("pause");
         const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
         // ---------- Particles ----------
-        const N = window.innerWidth < 768 ? 5000 : 9000;
-        const rand = () => Math.random();
+        const N = window.innerWidth < 768 ? 5000 : 10000;
+        const rand = Math.random;
         const r1 = new Float32Array(N), r2 = new Float32Array(N), r3 = new Float32Array(N), delay = new Float32Array(N);
         const ball = new Float32Array(N * 3);   // random point inside a unit ball
         const unit = new Float32Array(N * 3);   // random point on a unit sphere
@@ -951,9 +821,59 @@
             unit.set([x / l, y / l, z / l], i * 3);
         }
 
-        // Shape 1: braille for "access" (a, c, c, e, s, s), dots numbered 1-3 down the left, 4-6 down the right
+        // Every shape writes positions (P), glow (G, 0 = lilac, 1 = yellow) and opacity (A)
+
+        // Start: a Hopf fibration, circles that all link through each other,
+        // turned slowly through the fourth dimension and projected into 3D
+        const ETAS = [0.42, 0.78, 1.1], FIBRES = 14;
+        function hopf(t, P, G, A) {
+            const a = t * 0.12, ca = Math.cos(a), sa = Math.sin(a);
+            const lit = Math.floor(t * 0.9) % (ETAS.length * FIBRES);
+            for (let i = 0; i < N; i++) {
+                const f = Math.floor(r2[i] * ETAS.length * FIBRES);
+                const eta = ETAS[f % ETAS.length];
+                const phi = (Math.floor(f / ETAS.length) / FIBRES) * Math.PI * 2 + eta;
+                const s = r1[i] * Math.PI * 2 + t * 0.25;
+                const x1 = Math.cos(eta) * Math.cos(s), x2 = Math.cos(eta) * Math.sin(s);
+                const x3 = Math.sin(eta) * Math.cos(s + phi), x4 = Math.sin(eta) * Math.sin(s + phi);
+                const y2 = x2 * ca - x4 * sa, y4 = x2 * sa + x4 * ca;
+                const d = Math.max(1 - y4, 0.28);
+                let px = x1 / d, py = y2 / d, pz = x3 / d;
+                const len = Math.hypot(px, py, pz), cap = 3.2;
+                if (len > cap) { px *= cap / len; py *= cap / len; pz *= cap / len; }
+                P[i * 3] = px * 1.05 + ball[i * 3] * 0.02;
+                P[i * 3 + 1] = py * 1.05 + ball[i * 3 + 1] * 0.02;
+                P[i * 3 + 2] = pz * 1.05;
+                G[i] = f === lit ? 0.9 : 0;
+                A[i] = Math.min(1, 1.6 / (len + 0.4)) * 0.75;
+            }
+        }
+
+        // Why it matters: sixty people, one in six of them lit
+        const COLS = 12, ROWS = 5, PEOPLE = COLS * ROWS;
+        function people(t, P, G, A) {
+            for (let i = 0; i < N; i++) {
+                const f = Math.floor(r2[i] * PEOPLE);
+                const cx = (f % COLS - (COLS - 1) / 2) * 0.52;
+                const cy = ((ROWS - 1) / 2 - Math.floor(f / COLS)) * 0.7 + Math.sin(t * 1.2 + f * 0.7) * 0.03;
+                let x, y;
+                if (r3[i] < 0.35) {
+                    x = ball[i * 3] * 0.075; y = 0.13 + ball[i * 3 + 1] * 0.075;
+                } else {
+                    x = ball[i * 3] * 0.15; y = Math.abs(ball[i * 3 + 1]) * 0.15 - 0.17;
+                }
+                const lit = (f * 7) % PEOPLE < 10;
+                P[i * 3] = cx + x;
+                P[i * 3 + 1] = cy + y;
+                P[i * 3 + 2] = ball[i * 3 + 2] * 0.06;
+                G[i] = lit ? 0.7 + 0.3 * Math.sin(t * 2 + f) : 0;
+                A[i] = lit ? 0.8 : 0.38;
+            }
+        }
+
+        // Screen readers: braille for "access" (a, c, c, e, s, s), dots 1-3 down the left, 4-6 down the right
         const BRAILLE = [[1], [1, 4], [1, 4], [1, 5], [2, 3, 4], [2, 3, 4]];
-        const DOT = 0.42, PITCH = 1.0;
+        const DOT = 0.42, PITCH = 1.0, brailleW = 6 * PITCH;
         const filled = [], empty = [];
         BRAILLE.forEach((dots, c) => {
             for (let d = 1; d <= 6; d++) {
@@ -961,8 +881,6 @@
                 (dots.includes(d) ? filled : empty).push(p);
             }
         });
-        const brailleW = 6 * PITCH;
-
         function braille(t, P, G, A) {
             const cursor = ((t * 0.3) % 1) * (brailleW + 2) - (brailleW + 2) / 2;
             for (let i = 0; i < N; i++) {
@@ -979,7 +897,7 @@
             }
         }
 
-        // Shape 2: speech waveform on the left flowing into caption lines on the right
+        // Live captioning: a speech waveform on the left flowing into caption lines on the right
         const CAP_L = 3.4;
         const lines = [0.55, 0, -0.55].map((y, k) => {
             const end = k === 2 ? CAP_L * 0.55 : CAP_L;
@@ -993,7 +911,6 @@
             }
             return { y, words };
         });
-
         function captions(t, P, G, A) {
             for (let i = 0; i < N; i++) {
                 const u = (r1[i] + t * 0.05) % 1;
@@ -1013,7 +930,7 @@
             }
         }
 
-        // Shape 3: a voice orb pulsing out sound rings
+        // Speech technology: a voice orb pulsing out sound rings
         function voice(t, P, G, A) {
             const pulse = 0.55 + 0.45 * Math.sin(t * 2.4) * Math.sin(t * 0.9 + 1);
             for (let i = 0; i < N; i++) {
@@ -1038,7 +955,7 @@
             }
         }
 
-        // Shape 4: a lattice of elements with keyboard focus stepping through them in tab order
+        // Accessible code: a lattice of elements with keyboard focus stepping through them in tab order
         const G4 = 4, SP = 0.85, half = (G4 - 1) / 2;
         const nodes = [];
         for (let n = 0; n < G4 ** 3; n++) {
@@ -1051,7 +968,6 @@
             if (iy < G4 - 1) edges.push([a, nodes[n + G4]]);
             if (iz < G4 - 1) edges.push([a, nodes[n + G4 ** 2]]);
         });
-
         function lattice(t, P, G, A) {
             const f = t * 1.1;
             const n0 = Math.floor(f) % nodes.length, n1 = (n0 + 1) % nodes.length;
@@ -1085,14 +1001,107 @@
             }
         }
 
-        const SHAPES = [braille, captions, voice, lattice];
+        // Challenges: a grid of page elements; the inaccessible ones fall away
+        const GC = 10, GR = 6, GS = 0.6;
+        const cells = [];
+        for (let n = 0; n < GC * GR; n++) {
+            cells.push({
+                x: (n % GC - (GC - 1) / 2) * GS,
+                y: ((GR - 1) / 2 - Math.floor(n / GC)) * GS,
+                broken: (n * 13) % (GC * GR) < 12
+            });
+        }
+        const links = [];
+        cells.forEach((c, n) => {
+            if (n % GC < GC - 1) links.push([c, cells[n + 1]]);
+            if (n < GC * (GR - 1)) links.push([c, cells[n + GC]]);
+        });
+        function gaps(t, P, G, A) {
+            const yaw = -0.35 + Math.sin(t * 0.25) * 0.12, cyaw = Math.cos(yaw), syaw = Math.sin(yaw);
+            for (let i = 0; i < N; i++) {
+                let x, y, z = ball[i * 3 + 2] * 0.04;
+                if (r1[i] < 0.45) {
+                    const c = cells[Math.floor(r2[i] * cells.length)];
+                    x = c.x + ball[i * 3] * 0.09;
+                    y = c.y + ball[i * 3 + 1] * 0.09;
+                    if (c.broken) {
+                        const fall = (t * 0.35 + r3[i]) % 1;
+                        y -= fall * 2.4;
+                        x += Math.sin(r3[i] * 20 + fall * 3) * 0.15 * fall;
+                        G[i] = 0.7 * (1 - fall);
+                        A[i] = 0.7 * (1 - fall);
+                    } else {
+                        G[i] = 0;
+                        A[i] = 0.7;
+                    }
+                } else {
+                    const [a, b] = links[Math.floor(r2[i] * links.length)];
+                    x = a.x + (b.x - a.x) * r3[i];
+                    y = a.y + (b.y - a.y) * r3[i];
+                    G[i] = 0;
+                    A[i] = a.broken || b.broken ? 0.06 : 0.3;
+                }
+                P[i * 3] = x * cyaw + z * syaw;
+                P[i * 3 + 1] = y;
+                P[i * 3 + 2] = -x * syaw + z * cyaw;
+            }
+        }
+
+        // Author: the name, sampled from text drawn on a hidden canvas
+        let namePts = [[0, 0]];
+        function sampleName() {
+            const W = 800, H = 260, c = document.createElement("canvas");
+            c.width = W; c.height = H;
+            const ctx = c.getContext("2d");
+            ctx.fillStyle = "#fff";
+            ctx.font = '800 230px "Bricolage Grotesque", sans-serif';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("Enzo", W / 2, H / 2 + 10);
+            const data = ctx.getImageData(0, 0, W, H).data, pts = [];
+            for (let y = 0; y < H; y += 2) {
+                for (let x = 0; x < W; x += 2) {
+                    if (data[(y * W + x) * 4 + 3] > 128) pts.push([((x - W / 2) / W) * 6.6, (-(y - H / 2) / W) * 6.6]);
+                }
+            }
+            if (pts.length) namePts = pts;
+        }
+        sampleName();
+        document.fonts.load('800 230px "Bricolage Grotesque"').then(sampleName);
+        function name(t, P, G, A) {
+            const sweep = ((t * 0.22) % 1) * 9 - 4.5;
+            for (let i = 0; i < N; i++) {
+                const [px, py] = namePts[Math.floor(r2[i] * namePts.length)];
+                P[i * 3] = px + ball[i * 3] * 0.03;
+                P[i * 3 + 1] = py + ball[i * 3 + 1] * 0.03;
+                P[i * 3 + 2] = ball[i * 3 + 2] * 0.05 + Math.sin(px * 1.5 + t * 1.2) * 0.18;
+                G[i] = Math.exp(-((px - sweep) ** 2) / 0.3) * 0.9;
+                A[i] = 0.55;
+            }
+        }
+
+        // Sources: everything at rest, a slow flat cloud
+        function dust(t, P, G, A) {
+            const a = t * 0.05, ca = Math.cos(a), sa = Math.sin(a);
+            for (let i = 0; i < N; i++) {
+                const x = ball[i * 3] * 3.6, y = ball[i * 3 + 1] * 1.3, z = ball[i * 3 + 2] * 2;
+                P[i * 3] = x * ca + z * sa;
+                P[i * 3 + 1] = y;
+                P[i * 3 + 2] = -x * sa + z * ca;
+                G[i] = r1[i] < 0.02 ? 0.8 : 0;
+                A[i] = 0.3;
+            }
+        }
+
+        const SHAPES = { hopf, people, braille, captions, voice, lattice, gaps, name, dust };
+        const order = scenes.map(s => SHAPES[s.dataset.shape]);
 
         // ---------- three.js setup ----------
         let renderer;
         try {
             renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
         } catch (err) {
-            canvas.remove();
+            renderer = null;
         }
 
         const scene = new THREE.Scene();
@@ -1146,9 +1155,10 @@
         });
         group.add(new THREE.Points(geometry, material));
 
+        let wide = true;
         function resize() {
             if (!renderer) return;
-            const w = section.clientWidth, h = section.clientHeight;
+            const w = window.innerWidth, h = window.innerHeight;
             const dpr = Math.min(window.devicePixelRatio, 2);
             renderer.setPixelRatio(dpr);
             renderer.setSize(w, h, false);
@@ -1156,111 +1166,110 @@
             camera.updateProjectionMatrix();
             material.uniforms.uScale.value = (h * dpr) / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
 
-            // Fit the shapes beside the text on wide screens, above it on narrow ones
+            // Shapes sit to the right of the text on wide screens, above it on narrow ones
             const vh = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
             const vw = vh * camera.aspect;
-            if (w >= 992) {
-                group.position.set(vw * 0.2, 0.2, 0);
-                group.scale.setScalar(Math.min(1.1, (vw * 0.52) / 7, (vh * 0.7) / 4.6));
+            wide = w >= 992;
+            if (wide) {
+                group.position.set(vw * 0.19, 0, 0);
+                group.scale.setScalar(Math.min(1.05, (vw * 0.42) / 7, (vh * 0.62) / 4.6));
             } else {
-                group.position.set(0, vh * 0.24, 0);
-                group.scale.setScalar(Math.min(1, (vw * 0.92) / 7, (vh * 0.4) / 4.6));
+                group.position.set(0, vh * 0.2, 0);
+                group.scale.setScalar(Math.min(1, (vw * 0.92) / 7, (vh * 0.36) / 4.6));
             }
         }
         window.addEventListener("resize", resize);
 
-        // ---------- Cycling ----------
-        let current = 0, from = 0, morphStart = -Infinity, holdStart = 0;
-        let paused = still, visible = false, clock = 0, real = 0, last = performance.now();
+        // ---------- Scroll position → which shapes, and how far between them ----------
+        // Returns a continuous index: 2 means "fully the third scene", 2.5 means halfway to the fourth.
+        function scrollTarget() {
+            const vh = window.innerHeight, cy = vh * 0.5, zone = vh * 0.35;
+            const tops = scenes.map(s => s.getBoundingClientRect().top);
+            let idx = 0;
+            tops.forEach((top, k) => { if (top <= cy) idx = k; });
+            if (idx + 1 < scenes.length && tops[idx + 1] - cy < zone) {
+                return idx + 0.5 - (tops[idx + 1] - cy) / (2 * zone);
+            }
+            if (idx > 0 && cy - tops[idx] < zone) {
+                return idx - 0.5 + (cy - tops[idx]) / (2 * zone);
+            }
+            return idx;
+        }
 
-        function setCopy(i) {
-            const s = STATES[i];
-            copy.classList.add("swap");
+        let shown = scrollTarget(), activeScene = -1;
+        function setActive(k) {
+            if (k === activeScene) return;
+            activeScene = k;
+            railLinks.forEach((a, j) => a.setAttribute("aria-current", j === k ? "true" : "false"));
+            figNote.classList.add("swap");
             setTimeout(() => {
-                document.getElementById("orbit-flow").textContent = s.flow;
-                document.getElementById("orbit-name").textContent = s.name;
-                document.getElementById("orbit-desc").textContent = s.desc;
-                document.getElementById("orbit-visual").textContent = s.visual;
-                const link = document.getElementById("orbit-link");
-                link.href = s.href;
-                link.firstChild.textContent = s.link + " ";
-                copy.classList.remove("swap");
-            }, still ? 0 : 300);
-            tabs.forEach((tab, k) => {
-                tab.setAttribute("aria-current", k === i ? "true" : "false");
-                tab.style.setProperty("--p", k === i && paused ? 1 : 0);
-            });
+                figNote.textContent = scenes[k].dataset.note;
+                figNote.classList.remove("swap");
+            }, still ? 0 : 250);
         }
 
-        function goTo(i) {
-            if (i === current) return;
-            from = current;
-            current = i;
-            morphStart = still ? -Infinity : real;
-            holdStart = clock;
-            setCopy(i);
-        }
-
-        tabs.forEach(tab => tab.addEventListener("click", () => {
-            goTo(Number(tab.dataset.i));
-            holdStart = clock;
-        }));
-
+        // ---------- Pause, parallax ----------
+        let paused = still;
         function setPaused(p) {
             paused = p;
             pauseBtn.setAttribute("aria-label", p ? "Play animation" : "Pause animation");
             pauseBtn.innerHTML = `<i class="bi bi-${p ? "play" : "pause"}-fill" aria-hidden="true"></i>`;
-            tabs[current].style.setProperty("--p", p ? 1 : 0);
         }
         pauseBtn.addEventListener("click", () => setPaused(!paused));
-        if (still) setPaused(true);
+        setPaused(paused);
 
-        // Gentle parallax from the pointer
         let mx = 0, my = 0;
-        section.addEventListener("pointermove", e => {
-            const r = section.getBoundingClientRect();
-            mx = (e.clientX - r.left) / r.width - 0.5;
-            my = (e.clientY - r.top) / r.height - 0.5;
+        window.addEventListener("pointermove", e => {
+            mx = e.clientX / window.innerWidth - 0.5;
+            my = e.clientY / window.innerHeight - 0.5;
         });
 
-        new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }, { threshold: 0.05 }).observe(section);
-
         const ease = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+        let clock = 0, last = performance.now();
 
         function frame(now) {
             requestAnimationFrame(frame);
             const dt = Math.min((now - last) / 1000, 0.1);
             last = now;
-            if (!visible || !renderer) return;
-            real += dt;
             if (!paused) clock += dt;
 
-            if (!paused && clock - holdStart > HOLD) goTo((current + 1) % STATES.length);
-            if (!paused) tabs[current].style.setProperty("--p", Math.min((clock - holdStart) / HOLD, 1));
+            // Ease towards the scroll position so jumps (rail links) still morph smoothly
+            const target = scrollTarget();
+            shown = still ? Math.round(target) : shown + (target - shown) * Math.min(1, dt * 5);
+            if (Math.abs(target - shown) < 0.0005) shown = target;
+            const a = Math.min(Math.floor(shown), scenes.length - 1);
+            const m = shown - a;
+            setActive(m < 0.5 ? a : Math.min(a + 1, scenes.length - 1));
+            if (!renderer) return;
 
-            const m = (real - morphStart) / MORPH;
-            if (m < 1) {
-                SHAPES[from](clock, ...bufA);
-                SHAPES[current](clock, ...bufB);
+            if (m > 0.001 && a + 1 < scenes.length) {
+                order[a](clock, ...bufA);
+                order[a + 1](clock, ...bufB);
                 for (let i = 0; i < N; i++) {
                     const e = ease(Math.min(Math.max((m - delay[i]) / 0.65, 0), 1));
-                    const burst = Math.sin(Math.PI * e) * 1.4;
-                    for (let k = 0; k < 3; k++) {
-                        const j = i * 3 + k;
-                        pos[j] = bufA[0][j] + (bufB[0][j] - bufA[0][j]) * e + ball[j] * burst;
-                    }
-                    glow[i] = bufA[1][i] + (bufB[1][i] - bufA[1][i]) * e + burst * 0.15;
+                    // Wind down: spiral round the vertical axis and sink while between shapes
+                    const s = Math.sin(Math.PI * e);
+                    const turn = s * (1.4 + r1[i] * 1.6);
+                    const ct = Math.cos(turn), st = Math.sin(turn);
+                    const x = bufA[0][i * 3] + (bufB[0][i * 3] - bufA[0][i * 3]) * e + ball[i * 3] * s * 0.8;
+                    const y = bufA[0][i * 3 + 1] + (bufB[0][i * 3 + 1] - bufA[0][i * 3 + 1]) * e + ball[i * 3 + 1] * s * 0.8 - s * 1.1;
+                    const z = bufA[0][i * 3 + 2] + (bufB[0][i * 3 + 2] - bufA[0][i * 3 + 2]) * e + ball[i * 3 + 2] * s * 0.8;
+                    pos[i * 3] = x * ct + z * st;
+                    pos[i * 3 + 1] = y;
+                    pos[i * 3 + 2] = -x * st + z * ct;
+                    glow[i] = bufA[1][i] + (bufB[1][i] - bufA[1][i]) * e + s * 0.12;
                     alpha[i] = bufA[2][i] + (bufB[2][i] - bufA[2][i]) * e;
                 }
             } else {
-                SHAPES[current](clock, pos, glow, alpha);
+                order[a](clock, pos, glow, alpha);
             }
             geometry.attributes.position.needsUpdate = true;
             geometry.attributes.glow.needsUpdate = true;
             geometry.attributes.alpha.needsUpdate = true;
 
-            group.rotation.y += (mx * 0.5 + (still ? 0 : Math.sin(clock * 0.2) * 0.15) - group.rotation.y) * 0.05;
-            group.rotation.x += (my * 0.3 - group.rotation.x) * 0.05;
+            const sway = still ? 0 : Math.sin(clock * 0.2) * 0.12;
+            group.rotation.y += (mx * 0.45 + sway - group.rotation.y) * 0.05;
+            group.rotation.x += (my * 0.25 - group.rotation.x) * 0.05;
             renderer.render(scene, camera);
         }
 
