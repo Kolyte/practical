@@ -13,36 +13,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
-    <!-- Same shared theme as index.html, plus the styles for this page. -->
+    <!-- Shared group theme, then the styles for this page only -->
+    <link rel="stylesheet" href="style.css">
     <style>
         :root {
-            --bs-body-font-family: "Source Sans 3", system-ui, sans-serif;
-            --bs-body-bg: #f6f8f7;
-            --bs-body-color: #1c2b2b;
-            --bs-link-color: #0b5c5e;
-            --bs-link-hover-color: #073f41;
-            --ink: #0d3b3c;
-            --signal: #f2b134;
-            --mist: #dfe9e7;
             --topic: #7a4fa3;
             --topic-deep: #241536;
             --mono: "JetBrains Mono", ui-monospace, monospace;
-        }
-
-        h1, h2, h3, h4, .navbar-brand {
-            font-family: "Bricolage Grotesque", "Source Sans 3", sans-serif;
-            letter-spacing: -0.01em;
-        }
-
-        .navbar { background: var(--ink); }
-        .navbar .nav-link { color: rgba(255, 255, 255, 0.8); }
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active { color: #fff; }
-        .navbar .nav-link.active { box-shadow: inset 0 -3px 0 var(--signal); }
-
-        a:focus-visible, .btn:focus-visible, .nav-link:focus-visible {
-            outline: 3px solid var(--signal);
-            outline-offset: 2px;
         }
 
         .skip-link {
@@ -144,7 +121,6 @@
             font-size: clamp(1.15rem, 2.2vw, 1.45rem);
             line-height: 1.45;
             color: #fff;
-            min-height: 4.35em;
         }
         .caption-text .w { opacity: 0; transition: opacity 0.12s; }
         .caption-text .w.on { opacity: 1; }
@@ -281,17 +257,8 @@
             margin: 1rem 0 1.25rem;
         }
         .author .bio { font-size: 1.35rem; color: rgba(255, 255, 255, 0.85); }
-        .btn-signal {
-            background: var(--signal);
-            border-color: var(--signal);
-            color: #1c2b2b;
-            font-weight: 600;
-        }
-        .btn-signal:hover { background: #ffc04d; border-color: #ffc04d; color: #1c2b2b; }
 
         .reading a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
-
-        footer { background: var(--mist); }
 
         /* ---------- Scroll reveal ---------- */
         .js .reveal {
