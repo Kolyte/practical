@@ -62,12 +62,52 @@
         }
 .card
 {
-    border: solid black 2px;
+    border: solid #0d3b3c 5px;
     align-items: center;
-    width: 100px;
+    width: 200px;
     border-radius: 10px;
     text-align: center;
     position: relative;
     left: 10px;
     top: 10px;
+    font-size: larger;
+    font-family: "Bricolage Grotesque", "Source Sans 3", sans-serif;
+    background-color: #0b5c5e;
+    color: #fff;
+    font-weight: bolder;
+}
+.arrow
+{
+    border: solid #0d3b3c;
+    border-width: 0 4px 4px 0;
+    padding: 6px;
+    width: 10px;
+    height: 10px;
+    left: 20px;
+    top: 500px  ;
+}
+.triangle
+{
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #0d3b3c;
+
+}
+.card1
+{
+    border: solid #0d3b3c 5px;
+    align-items: center;
+    width: 500px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    left: 10px;
+    top: 25px;
+    font-size: larger;
+    font-family: "Bricolage Grotesque", "Source Sans 3", sans-serif;
+    background-color: #0b5c5e;
+    color: #fff;
+    font-weight: bolder;
 }
