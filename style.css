@@ -60,3 +60,14 @@
             outline: 3px solid var(--signal);
             outline-offset: 2px;
         }
+.card
+{
+    border: solid black 2px;
+    align-items: center;
+    width: 100px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    left: 10px;
+    top: 10px;
+}
