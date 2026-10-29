@@ -1,0 +1,19 @@
+body
+{
+    --bs-body-font-family: "Source Sans 3", system-ui, sans-serif;
+    font:100;
+    background-color: #fff;
+}
+h1
+{
+    font: 200;
+}
+.card
+{
+    border: solid black 2px;
+    align-items: center;
+    width: 100px;
+    border-radius: 10px;
+    text-align: center;
+    
+}
