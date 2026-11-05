@@ -62,7 +62,7 @@
         }
 .card
 {
-    border: solid #0d3b3c 5px;
+    border: solid #000 4px;
     align-items: center;
     width: 200px;
     border-radius: 10px;
@@ -86,7 +86,6 @@
     left: 20px;
     top: 500px  ;
 }
-.triangle
 {
     width: 0;
     height: 0;
@@ -97,11 +96,13 @@
 }
 .card1
 {
-    border: solid #0d3b3c 5px;
+    border: solid #000000 4px;
+    display: flex;
     align-items: center;
     width: 500px;
-    border-radius: 10px;
+    border-radius: 0px;
     text-align: center;
+    text-justify: auto;
     position: relative;
     left: 10px;
     top: 25px;
@@ -110,4 +111,12 @@
     background-color: #0b5c5e;
     color: #fff;
     font-weight: bolder;
+    height: 275px;
+    
+}
+#arrow
+{
+    position: relative;
+    left: 450px;
+    bottom: 400px;
 }
